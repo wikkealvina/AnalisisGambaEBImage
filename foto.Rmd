@@ -1,0 +1,139 @@
+---
+title: "Menganalisis Gambar menggunakan EBImage"
+author: "Wikke Alvina medyanti  || Teknik Informatika UIN Maulana Malik Ibrahim Malang || Dosen Pengampu: Prof.Dr. Suhartono, M.Kom"
+date: "17 Maret 2021"
+output: html_document
+---
+1. Instalasi Package
+
+Sebelum menganalisis gambar menggunakan EBImage, kita harus menginstall package terlebih dahulu untuk memunculkan dan menjalankan program.
+```{r}
+library(EBImage)
+
+```
+2. Import Gambar
+setelah library diimportkan, kemudian import gambar yang ingin ditampilkan. Dalam tanda kutip tersebut isi sesuai nama gambar dan lokasinya.
+
+```{r}
+Image <- readImage("D:/UIN/SEMESTER 2/Linear Algebra/cobabimage/ty.jpg")
+display(Image)
+
+```
+```{r}
+print(Image)
+```
+```{r}
+## Image 
+##   colorMode    : Color 
+##   storage.mode : double 
+##   dim          : 2938 1953 3 
+##   frames.total : 3 
+##   frames.render: 1 
+## 
+## imageData(object)[1:5,1:6,1]
+##           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
+## [1,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [2,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [3,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [4,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [5,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+```
+
+3. Histogram Gambar
+```{r}
+hist(Image)
+```
+4. Kecerahan
+Untuk menambah keerahan menggunakan simbol (+) sedangkan untuk mengurang kecerahan menggunakan simbol (-) untuk mengurangi kecerahan . Disini saya menambahkan 0.5 dan mengurangi 0.5 untuk intensitasnya. Plot berfungsi untuk menampilkan kedua gambar tersebut.
+```{r}
+Image1 <- Image + 0.5
+Image2 <- Image - 0.5
+par(mfrow= c(1,2))
+plot(Image1)
+plot(Image2)
+```
+
+5. Penyesuaian Kontras
+Menyesuaikan kontras gambar dengan perkalian, dimana image3 dikali dengan 0.4 dan image4 dikali dengan 3
+```{r}
+Image3 <- Image * 0.4
+Image4 <- Image * 3
+par(mfrow = c(1,2))
+plot(Image3)
+plot(Image4)
+
+```
+
+6. Koreksi Gamma
+Gamma adalah nama dari sebuah operasi nonlinier yang digunakan untuk code dan decode luminance atau tristimulus nilai-nilai dalam vidio atau sistem gambar. Pada gambar pertama menggunakan nilai 2 dan gambar kedua menggunakan nilai 0.8 dengan pengaplikasian simbol (^).
+```{r}
+Image5 <- Image ^ 2
+Image6 <- Image ^ 0.8
+par(mfrow = c(1,2))
+plot(Image5)
+plot(Image6)
+```
+
+7. Memotong Gambar (Crop)
+Selanjutnya, Code dibawah ini digunakan untuk memotong gambar. Rentang gambar yang saya miliki adalah 1080 X 1347, sehingga tidak boleh melebihi angka itu dalam menginputkan.
+```{r}
+display(Image[300:800, 200:800,])
+
+```
+
+8. Transformasi Spasial
+Pada transformasi spasial, output akan menampilkan gambar diputar atau dirotasi.
+```{r}
+Imagetr <- translate(rotate(Image, 45), c(50, 0))
+display(Imagetr)
+```
+
+9. Pengaturan Warna (Color Management)
+Dengan pengaturan warna ini, warna gambar akan berubah sesuai dengan warna yang diatur. Di sini, saya menggunakan warna graysicale sehingga nanti warna gambarnya akan menjadi graysicale.
+```{r}
+colorMode(Image) <- Grayscale
+display(Image)
+```
+```{r}
+## Only the first frame of the image stack is displayed.
+## To display all frames use 'all = TRUE'.
+```
+```{r}
+print(Image)
+```
+```{r}
+## Image 
+##   colorMode    : Grayscale 
+##   storage.mode : double 
+##   dim          : 2938 1953 3 
+##   frames.total : 3 
+##   frames.render: 3 
+## 
+## imageData(object)[1:5,1:6,1]
+##           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
+## [1,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [2,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [3,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [4,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+## [5,] 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922 0.1803922
+```
+```{r}
+colorMode(Image) <- Color
+display(Image)
+
+```
+10.  Filter
+Gambar juga dapat diberikan filter.Kali ini gambar akan dikaburkan atau diburamkan dengan menggunakan low-pass filter dan selanjutnya gambar akan diberi high-pass filter untuk melihat perbedaanya.
+```{r}
+fLow <- makeBrush(21, shape='disc', step = FALSE)^2
+fLow <- fLow/sum(fLow)
+Image.fLow <- filter2(Image, fLow)
+display(Image.fLow)
+```
+Daftar Pustaka:
+1. https://thinkstudioo.blogspot.com/2018/03/analisis-image-menggunakan-ebimage-di-r.html
+2. https://thinkstudioo.blogspot.com/2018/03/analisis-image-menggunakan-ebimage-di-r_6.html
+
+
+
+
